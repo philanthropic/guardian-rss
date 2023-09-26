@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express, { Request, Response, NextFunction } from 'express';
 import { GuardianController } from './controller/guardian';
 import { AppError } from './error';
+import { CacheService } from './services/cache';
 
 dotenv.config();
 
@@ -15,11 +16,12 @@ if (!apiKey) {
   process.exit(1);
 }
 
-const guardianController = new GuardianController();
+const cachingSvc = new CacheService(Number(ttl));
+const guardianController = new GuardianController(cachingSvc);
 
 const app = express();
 
-app.get('/:section', (req, res, next) => {
+app.get('/:section', (req: Request, res: Response, next: NextFunction) => {
   try {
     guardianController.handleSection(req, res);
   } catch (error) {
