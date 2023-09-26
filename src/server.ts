@@ -1,10 +1,11 @@
-import dotenv from 'dotenv';
 import express, { Request, Response, NextFunction } from 'express';
 import { GuardianController } from './controller/guardian';
 import { AppError } from './error';
 import { CacheService } from './services/cache';
 import { GuardianService } from './services/guardian';
 import { FeedService } from './services/feed';
+import logger from './logger';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ const apiURL = process.env.APIURL || 'https://content.guardianapis.com';
 const apiKey = process.env.APIKEY;
 
 if (!apiKey) {
-  console.log('APIKEY environment variable is required.');
+  logger.error('APIKEY environment variable is required.');
   process.exit(1);
 }
 
@@ -42,12 +43,12 @@ const errorHandler = (
   res: Response,
   __: NextFunction
 ) => {
-  console.log(`${error.message}`);
+  logger.error(`error ${error.message}`);
   res.sendStatus(error.statusCode);
 };
 
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+  logger.info(`[server]: Server is running at http://localhost:${port}`);
 });
