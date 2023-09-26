@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
+import { GuardianController } from './controller/guardian';
 
 dotenv.config();
 
@@ -13,11 +14,29 @@ if (!apiKey) {
   process.exit(1);
 }
 
+const guardianController = new GuardianController();
+
 const app = express();
 
-app.get('/', (_, res) => {
-  res.status(200).send('Hello World');
+app.get('/:section', (req, res, next) => {
+  try {
+    guardianController.handleSection(req, res);
+  } catch (error) {
+    next(error);
+  }
 });
+
+const errorHandler = (
+  error: Error,
+  _: Request,
+  res: Response,
+  __: NextFunction
+) => {
+  console.log(`something bad happened: ${error.message}`);
+  res.sendStatus(400);
+};
+
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
