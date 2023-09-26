@@ -1,0 +1,29 @@
+# Files and directories to exclude from the Docker image build
+
+# Node.js development-related files
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Build and development tools
+.vscode/
+.idea/
+.npmrc
+yarn.lock
+*.ts
+*.log
+*.md
+*.yml
+*.yaml
+*.log
+*.bat
+*.cmd
+
+# Editor-specific files
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

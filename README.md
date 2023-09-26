@@ -15,6 +15,11 @@ export APIURL='https://content.guardianapis.com'
 - `yarn local` - starts server in localhost, not intended to use in prod.
 - `yarn build && yarn start` - used in production to start the app.
 
+## Docker
+
+- Build docker image and tag it with `docker build -t guardian-rss .`
+- Run the image and map port to host machine `docker run -p 3000:3000 guardian-rss`
+
 ## Configuration and Setup
 
 Node version is managed with [nvm](https://github.com/nvm-sh/nvm).
