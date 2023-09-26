@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express, { Request, Response, NextFunction } from 'express';
 import { GuardianController } from './controller/guardian';
+import { AppError } from './error';
 
 dotenv.config();
 
@@ -27,13 +28,13 @@ app.get('/:section', (req, res, next) => {
 });
 
 const errorHandler = (
-  error: Error,
+  error: AppError,
   _: Request,
   res: Response,
   __: NextFunction
 ) => {
-  console.log(`something bad happened: ${error.message}`);
-  res.sendStatus(400);
+  console.log(`${error.message}`);
+  res.sendStatus(error.statusCode);
 };
 
 app.use(errorHandler);

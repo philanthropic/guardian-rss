@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AppError } from '../error';
 
 export class GuardianController {
   constructor() {}
@@ -10,7 +11,7 @@ export class GuardianController {
     const section = req.params.section;
 
     if (!re.test(section)) {
-      throw new Error('invalid section name');
+      throw new AppError(400, `invalid guardian api section name: ${section}`);
     }
 
     resp.status(200).send(`coming from controller :${section}`);
