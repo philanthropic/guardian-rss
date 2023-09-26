@@ -3,6 +3,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import { GuardianController } from './controller/guardian';
 import { AppError } from './error';
 import { CacheService } from './services/cache';
+import { GuardianService } from './services/guardian';
+import { FeedService } from './services/feed';
 
 dotenv.config();
 
@@ -16,18 +18,23 @@ if (!apiKey) {
   process.exit(1);
 }
 
+const guardianSvc = new GuardianService(apiURL, apiKey);
+const rssfeedSvc = new FeedService(guardianSvc);
 const cachingSvc = new CacheService(Number(ttl));
-const guardianController = new GuardianController(cachingSvc);
 
+const guardianController = new GuardianController(rssfeedSvc, cachingSvc);
 const app = express();
 
-app.get('/:section', (req: Request, res: Response, next: NextFunction) => {
-  try {
-    guardianController.handleSection(req, res);
-  } catch (error) {
-    next(error);
+app.get(
+  '/:section',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await guardianController.handleSection(req, res);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 const errorHandler = (
   error: AppError,

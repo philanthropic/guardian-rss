@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
+import { FeedService } from '../services/feed';
 import { CacheService } from '../services/cache';
 import { AppError } from '../error';
 
 export class GuardianController {
-  constructor(private cache: CacheService) {}
+  constructor(
+    private feedSvc: FeedService,
+    private cache: CacheService
+  ) {}
 
-  handleSection(req: Request, resp: Response) {
+  async handleSection(req: Request, resp: Response) {
     // regex to match kebab-case strings
     const re = /^[a-z]+(?:-[a-z]+)*$/;
 
@@ -19,9 +23,9 @@ export class GuardianController {
       );
     }
 
-    // TODO: need to build feedService
     if (!this.cache.get(section)) {
-      const xml = '<xml></xml>';
+      const hostUrl = `${req.protocol}://${req.get('host')}`;
+      const xml = await this.feedSvc.generate(section, hostUrl);
 
       this.cache.save(section, xml);
     }
