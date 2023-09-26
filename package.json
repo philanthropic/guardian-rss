@@ -6,12 +6,19 @@
   "author": "Gopal KC<gopalkc21@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc"
+    "compile": "tsc",
+    "local": "ts-node-dev src/server.ts"
   },
   "devDependencies": {
+    "@types/express": "^4.17.18",
     "@types/node": "^20.6.5",
     "eslint": "^8.50.0",
     "prettier": "^3.0.3",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
   }
 }
